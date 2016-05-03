@@ -67,9 +67,12 @@ display_pctacv <- c(0, 0.70, 0.70)
 feature_pctacv <- c(0, 0, 1)
 scenarios <- data.frame(price, display_pctacv, feature_pctacv)
 
-# Method 1: Calculate lift manually
 # Run calculation for Dominicks
 scenarios$price^(reg2.1$coefficients[2])*exp(scenarios$display_pctacv*reg2.1$coefficients[3])*exp(scenarios$feature_pctacv*reg2.1$coefficients[4])
+
 # Run calculation for Jewel.  Coeffieient on Feature is not statistically significant, so it is set to 0
 scenarios$price^(reg2.2$coefficients[2])*exp(scenarios$display_pctacv*reg2.2$coefficients[3])*exp(scenarios$feature_pctacv*0)
 
+# Export regression coefficients
+write.csv(summary(reg2.1)$coefficients,"Dominicks Regression.csv")
+write.csv(summary(reg2.2)$coefficients,"Jewel Regression.csv")
