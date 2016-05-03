@@ -19,10 +19,14 @@ hellmans_DF$price = hellmans_DF$sales_dollars/hellmans_DF$sales_units
 
 # Divide the percentage variables by 100
 hellmans_DF$feature_pctacv = hellmans_DF$feature_pctacv/100
-hellmans_DF$display_pctacv = hellmans_DF$display_pctacv/10
+hellmans_DF$display_pctacv = hellmans_DF$display_pctacv/100
 
-# Create a historgam by account
+# Create a historgam and summary statistics of Feature by account
+describeBy(hellmans_DF$feature_pctacv, group = hellmans_DF$account)
 histogram(~feature_pctacv | account, data = hellmans_DF, type = "count", main = "Histogram of Feature Percent")
+
+# Create a historgam and summary statistics of Feature by account
+describeBy(hellmans_DF$display_pctacv, group = hellmans_DF$account)
 histogram(~display_pctacv | account, data = hellmans_DF, type = "count", main = "Histogram of Feature Percent")
 
 # These promotional instruments differ in that feature is typically either 100% or zero.  
@@ -30,8 +34,13 @@ histogram(~display_pctacv | account, data = hellmans_DF, type = "count", main = 
 
 # Calculate correlations between variables
 cor(hellmans_DF$feature_pctacv, hellmans_DF$display_pctacv)
+ddply(hellmans_DF,"account",function(x) cor(x$feature_pctacv, x$display_pctacv))
+
 cor(hellmans_DF$feature_pctacv, hellmans_DF$price)
+ddply(hellmans_DF,"account",function(x) cor(x$feature_pctacv, x$price))
+
 cor(hellmans_DF$display_pctacv, hellmans_DF$price)
+ddply(hellmans_DF,"account",function(x) cor(x$display_pctacv, x$price))
 
 # Feature and display are highly correlated. The are both negatively correclated with price.
 # This presents a potential problem because we may not be able to tell if it is price decreases or promotions that are driving sales.
@@ -47,9 +56,9 @@ summary(reg1.2)
 
 
 # Run a regression using price, feature and display
-reg2.1 <- lm(log(sales_units) ~ log(price) + display_pctacv + feature_pctacv, data = hellmans_DF[which(hellmans_DF$account == "Dominicks"),])
+reg2.1 <- lm(log(sales_units) ~ log(price) + display_pctacv + feature_pctacv, data = hellmans_DF, subset = account == "Dominicks")
 summary(reg2.1)
-reg2.2 <- lm(log(sales_units) ~ log(price) + display_pctacv + feature_pctacv, data = hellmans_DF[which(hellmans_DF$account == "Jewel"),])
+reg2.2 <- lm(log(sales_units) ~ log(price) + display_pctacv + feature_pctacv, data = hellmans_DF, subset = account == "Jewel")
 summary(reg2.2)
 
 ########################################################
