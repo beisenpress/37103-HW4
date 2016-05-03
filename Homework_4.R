@@ -68,18 +68,8 @@ feature_pctacv <- c(0, 0, 1)
 scenarios <- data.frame(price, display_pctacv, feature_pctacv)
 
 # Method 1: Calculate lift manually
+# Run calculation for Dominicks
 scenarios$price^(reg2.1$coefficients[2])*exp(scenarios$display_pctacv*reg2.1$coefficients[3])*exp(scenarios$feature_pctacv*reg2.1$coefficients[4])
-scenarios$price^(reg2.2$coefficients[2])*exp(scenarios$display_pctacv*reg2.2$coefficients[3])*exp(scenarios$feature_pctacv*reg2.2$coefficients[4])
-
-# Make a baseline prediction
-base_pred2.1 <- exp(predict(reg2.1, newdata = base))
-base_pred2.2 <- exp(predict(reg2.2, newdata = base))
-
-# Make predictions for scenarios 
-scenario_pred2.1 <- exp(predict(reg2.1, newdata = scenarios))
-scenario_pred2.2 <- exp(predict(reg2.2, newdata = scenarios))
-
-# Calculate predictions as a percentage of base
-scenario_pred2.1 / base_pred2.1
-scenario_pred2.2 / base_pred2.2
+# Run calculation for Jewel.  Coeffieient on Feature is not statistically significant, so it is set to 0
+scenarios$price^(reg2.2$coefficients[2])*exp(scenarios$display_pctacv*reg2.2$coefficients[3])*exp(scenarios$feature_pctacv*0)
 
